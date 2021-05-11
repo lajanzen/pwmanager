@@ -2,6 +2,7 @@ import {
   askForMainPassword,
   chooseCommand,
   addNewCredential,
+  credentialList,
 } from "./utils/questions";
 import { isMainPasswordValid } from "./utils/validation";
 
@@ -29,7 +30,7 @@ const start = async () => {
 
   switch (command) {
     case "list":
-      console.log("List Case");
+      credentialList();
       break;
     case "add":
       addNewCredential();

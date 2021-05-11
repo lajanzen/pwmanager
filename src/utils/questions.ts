@@ -53,3 +53,19 @@ export const addNewCredential = async (): Promise<string> => {
   ]);
   return inputService.service, inputUsername.username, inputPassword.password;
 };
+
+export const credentialList = async (): Promise<string> => {
+  const answers = await inquirer.prompt<{ list: string }>([
+    {
+      type: "list",
+      name: "list",
+      message: "These are your saved credentials:",
+      choices: [
+        { name: "Google", value: "google" },
+        { name: "Github", value: "github" },
+        { name: "Codewars", value: "codewars" },
+      ],
+    },
+  ]);
+  return answers.list;
+};
