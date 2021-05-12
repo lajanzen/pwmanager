@@ -58,13 +58,13 @@ export const addNewUserAndPw = async (): Promise<NewUserAndPw> => {
   return answers;
 };
 
-export const chooseService = async (): Promise<string> => {
+export const chooseService = async (services: string[]): Promise<string> => {
   const answers = await inquirer.prompt<{ service: string }>([
     {
       type: "list",
       name: "service",
       message: "These are your saved credentials:",
-      choices: ["Google", "Github", "Codewars"],
+      choices: services,
     },
   ]);
   return answers.service;

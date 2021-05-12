@@ -1,4 +1,4 @@
-import { printPassword } from "./utils/messages";
+// import { printPassword } from "./utils/messages";
 import {
   askForMainPassword,
   chooseCommand,
@@ -7,6 +7,7 @@ import {
   addNewUserAndPw,
 } from "./utils/questions";
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
+import { readCredentials } from "./utils/credentials";
 
 /* Solution with Recursion */
 // function start () {
@@ -33,8 +34,16 @@ const start = async () => {
   switch (command) {
     case "list":
       {
-        const service = await chooseService();
-        printPassword(service);
+        const credentials = await readCredentials();
+        const credentialServices = credentials.map(
+          (credential) => credential.service
+        );
+        const service = await chooseService(credentialServices);
+        const selectedService = credentials.find(
+          (credential) => credential.service === service
+        );
+        console.log(selectedService);
+        // printPassword(service);
       }
 
       break;
