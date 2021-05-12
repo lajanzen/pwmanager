@@ -29,40 +29,45 @@ const start = async () => {
   //   }
   //   console.log("Is valid");
 
-  const command = await chooseCommand();
+  const askforCommand = async () => {
+    const command = await chooseCommand();
 
-  switch (command) {
-    case "list":
-      {
-        const credentials = await readCredentials();
-        const credentialServices = credentials.map(
-          (credential) => credential.service
-        );
-        const service = await chooseService(credentialServices);
-        const selectedService = credentials.find(
-          (credential) => credential.service === service
-        );
-        console.log(selectedService);
-        // printPassword(service);
-      }
+    switch (command) {
+      case "list":
+        {
+          const credentials = await readCredentials();
+          const credentialServices = credentials.map(
+            (credential) => credential.service
+          );
+          const service = await chooseService(credentialServices);
+          const selectedService = credentials.find(
+            (credential) => credential.service === service
+          );
+          console.log(selectedService);
+          askforCommand();
+          // printPassword(service);
+        }
 
-      break;
-    case "add":
-      {
-        const askForCredential = async () => {
-          const newService = await addNewService();
-          if (doesServiceExist(newService)) {
-            console.log("Does already exist");
-            askForCredential(); // Recursion (springt zurück nach oben)
-          } else {
-            await addNewUserAndPw();
-            console.log("We've saved you new credentials");
-          }
-        };
-        askForCredential();
-      }
-      break;
-  }
+        break;
+      case "add":
+        {
+          const askForCredential = async () => {
+            const newService = await addNewService();
+            if (doesServiceExist(newService)) {
+              console.log("Does already exist");
+              askForCredential(); // Recursion (springt zurück nach oben)
+            } else {
+              await addNewUserAndPw();
+              console.log("We've saved you new credentials");
+              askforCommand();
+            }
+          };
+          askForCredential();
+        }
+        break;
+    }
+  };
+  askforCommand();
 };
 
 start();
