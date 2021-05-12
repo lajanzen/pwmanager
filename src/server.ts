@@ -1,10 +1,12 @@
+import { printPassword } from "./utils/messages";
 import {
   askForMainPassword,
   chooseCommand,
-  addNewCredential,
-  credentialList,
+  addNewService,
+  chooseService,
+  addNewUserAndPw,
 } from "./utils/questions";
-import { isMainPasswordValid } from "./utils/validation";
+import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
 
 /* Solution with Recursion */
 // function start () {
@@ -30,10 +32,26 @@ const start = async () => {
 
   switch (command) {
     case "list":
-      credentialList();
+      {
+        const service = await chooseService();
+        printPassword(service);
+      }
+
       break;
     case "add":
-      addNewCredential();
+      {
+        const askForCredential = async () => {
+          const newService = await addNewService();
+          if (doesServiceExist(newService)) {
+            console.log("Does already exist");
+            askForCredential(); // Recursion (springt zurück nach oben)
+          } else {
+            await addNewUserAndPw();
+            console.log("We've saved you new credentials");
+          }
+        };
+        askForCredential();
+      }
       break;
   }
 };

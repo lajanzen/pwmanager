@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { Command } from "../types";
+import type { Command, NewUserAndPw } from "../types";
 
 // export function askForMainPassword(): Promise<string> {
 export const askForMainPassword = (): Promise<string> => {
@@ -9,6 +9,7 @@ export const askForMainPassword = (): Promise<string> => {
         type: "password",
         name: "mainPassword",
         message: "Enter main password",
+        mark: "*",
       },
     ])
     .then((answers) => answers.mainPassword);
@@ -29,7 +30,7 @@ export const chooseCommand = async (): Promise<Command> => {
   return answers.command;
 };
 
-export const addNewCredential = async (): Promise<string> => {
+export const addNewService = async (): Promise<string> => {
   const inputService = await inquirer.prompt<{ service: string }>([
     {
       type: "input",
@@ -37,35 +38,34 @@ export const addNewCredential = async (): Promise<string> => {
       message: "What's the service?",
     },
   ]);
-  const inputUsername = await inquirer.prompt<{ username: string }>([
+  return inputService.service;
+};
+
+export const addNewUserAndPw = async (): Promise<NewUserAndPw> => {
+  const answers = await inquirer.prompt<NewUserAndPw>([
     {
       type: "input",
       name: "username",
       message: "What your username?",
     },
-  ]);
-  const inputPassword = await inquirer.prompt<{ password: string }>([
     {
-      type: "input",
+      type: "password",
       name: "password",
-      message: "What your password?",
+      message: "What's your password?",
+      mask: "*",
     },
   ]);
-  return inputService.service, inputUsername.username, inputPassword.password;
+  return answers;
 };
 
-export const credentialList = async (): Promise<string> => {
-  const answers = await inquirer.prompt<{ list: string }>([
+export const chooseService = async (): Promise<string> => {
+  const answers = await inquirer.prompt<{ service: string }>([
     {
       type: "list",
-      name: "list",
+      name: "service",
       message: "These are your saved credentials:",
-      choices: [
-        { name: "Google", value: "google" },
-        { name: "Github", value: "github" },
-        { name: "Codewars", value: "codewars" },
-      ],
+      choices: ["Google", "Github", "Codewars"],
     },
   ]);
-  return answers.list;
+  return answers.service;
 };
