@@ -4,10 +4,9 @@ import {
   chooseCommand,
   addNewService,
   chooseService,
-  addNewUserAndPw,
 } from "./utils/questions";
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
-import { readCredentials } from "./utils/credentials";
+import { readCredentials, saveCredentials } from "./utils/credentials";
 
 /* Solution with Recursion */
 // function start () {
@@ -51,18 +50,12 @@ const start = async () => {
         break;
       case "add":
         {
-          const askForCredential = async () => {
-            const newService = await addNewService();
-            if (doesServiceExist(newService)) {
-              console.log("Does already exist");
-              askForCredential(); // Recursion (springt zurück nach oben)
-            } else {
-              await addNewUserAndPw();
-              console.log("We've saved you new credentials");
-              askforCommand();
-            }
-          };
-          askForCredential();
+          const newService = await addNewService();
+          if (doesServiceExist(newService)) {
+            console.log("Does already exist");
+          } else {
+            saveCredentials();
+          }
         }
         break;
     }

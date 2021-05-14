@@ -1,10 +1,44 @@
 {
   "credentials": [
-    { "service": "GitHub", "username": "Lara", "password": "123" },
-    { "service": "Google", "username": "LJ", "password": "321" },
-    { "service": "Codewars", "username": "LJ", "password": "321" },
-    { "service": "Hotmail", "username": "LJ", "password": "321" },
-    { "service": "Netflix", "username": "LJ", "password": "321" },
-    { "service": "Amazon", "username": "LJ", "password": "321" }
+    {
+      "service": "GitHub",
+      "username": "Lara",
+      "password": "123"
+    },
+    {
+      "service": "Google",
+      "username": "LJ",
+      "password": "321"
+    },
+    {
+      "service": "Codewars",
+      "username": "LJ",
+      "password": "321"
+    },
+    {
+      "service": "Hotmail",
+      "username": "LJ",
+      "password": "321"
+    },
+    {
+      "service": "Netflix",
+      "username": "LJ",
+      "password": "321"
+    },
+    {
+      "service": "Amazon",
+      "username": "LJ",
+      "password": "321"
+    },
+    {
+      "service": "new",
+      "username": "aergöh",
+      "password": "ergtqer"
+    },
+    {
+      "service": "erg",
+      "username": "wztj",
+      "password": "eRG"
+    }
   ]
 }
