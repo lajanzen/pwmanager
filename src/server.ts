@@ -54,7 +54,8 @@ const start = async () => {
           if (doesServiceExist(newService)) {
             console.log("Does already exist");
           } else {
-            saveCredentials();
+            await saveCredentials();
+            console.log("We've saved your new credentials!");
           }
         }
         break;
