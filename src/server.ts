@@ -1,12 +1,12 @@
-// import { printPassword } from "./utils/messages";
 import {
   askForMainPassword,
   chooseCommand,
-  addNewService,
   chooseService,
+  askForCredential,
 } from "./utils/questions";
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
 import { readCredentials, saveCredentials } from "./utils/credentials";
+import CryptoJS from "crypto-js";
 
 /* Solution with Recursion */
 // function start () {
@@ -42,21 +42,31 @@ const start = async () => {
           const selectedService = credentials.find(
             (credential) => credential.service === service
           );
-          console.log(selectedService);
+          if (selectedService) {
+            const decrypted = CryptoJS.AES.decrypt(
+              selectedService.password,
+              "bla"
+            );
+            const password = decrypted.toString(CryptoJS.enc.Utf8);
+            console.log(
+              `Your password for ${selectedService.service} is ${password}.`
+            );
+          }
           askforCommand();
-          // printPassword(service);
         }
 
         break;
       case "add":
         {
-          const newService = await addNewService();
-          if (doesServiceExist(newService)) {
-            console.log("Does already exist");
-          } else {
-            await saveCredentials();
-            console.log("We've saved your new credentials!");
+          let newCredential = await askForCredential();
+          while (await doesServiceExist(newCredential)) {
+            console.log(
+              `The service "${newCredential.service}" already exists!`
+            );
+            newCredential = await askForCredential();
           }
+          await saveCredentials(newCredential);
+          console.log("We've saved your new credentials!");
         }
         break;
     }

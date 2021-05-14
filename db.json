@@ -1,69 +1,19 @@
 {
   "credentials": [
     {
-      "service": "GitHub",
-      "username": "Lara",
-      "password": "123"
-    },
-    {
       "service": "Google",
-      "username": "LJ",
-      "password": "321"
+      "username": "Lara",
+      "password": "U2FsdGVkX1+CiVG9sXGW65fWI4BIUKBzdLHqzLfxl5M="
     },
     {
-      "service": "Codewars",
+      "service": "GitHub",
       "username": "LJ",
-      "password": "321"
+      "password": "U2FsdGVkX1/or9muMu3QMVGnbKPU4P1tHPrPbZGvIC4="
     },
     {
       "service": "Hotmail",
-      "username": "LJ",
-      "password": "321"
-    },
-    {
-      "service": "Netflix",
-      "username": "LJ",
-      "password": "321"
-    },
-    {
-      "service": "Amazon",
-      "username": "LJ",
-      "password": "321"
-    },
-    {
-      "service": "new",
-      "username": "aergöh",
-      "password": "ergtqer"
-    },
-    {
-      "service": "erg",
-      "username": "wztj",
-      "password": "eRG"
-    },
-    {
-      "service": "hehe",
-      "username": "qöwerhg",
-      "password": "thtz"
-    },
-    {
-      "service": "wef",
-      "username": "wewf",
-      "password": "rgr"
-    },
-    {
-      "service": "new",
-      "username": "new",
-      "password": "new"
-    },
-    {
-      "service": "zuzu",
-      "username": "öoug",
-      "password": "wrger"
-    },
-    {
-      "service": "erglkjb",
-      "username": "lara",
-      "password": "U2FsdGVkX1+43p/YtFOIjyWIGjJGi49U9WeVC7zz3iI="
+      "username": "LH",
+      "password": "U2FsdGVkX18aAiIMxM3V19LQgXZlnE1gO509riUy5ws="
     }
   ]
 }
