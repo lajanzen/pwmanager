@@ -1,0 +1,19 @@
+{
+  "credentials": [
+    {
+      "service": "Google",
+      "username": "Lara",
+      "password": "U2FsdGVkX1+CiVG9sXGW65fWI4BIUKBzdLHqzLfxl5M="
+    },
+    {
+      "service": "GitHub",
+      "username": "LJ",
+      "password": "U2FsdGVkX1/or9muMu3QMVGnbKPU4P1tHPrPbZGvIC4="
+    },
+    {
+      "service": "Hotmail",
+      "username": "LH",
+      "password": "U2FsdGVkX18aAiIMxM3V19LQgXZlnE1gO509riUy5ws="
+    }
+  ]
+}
