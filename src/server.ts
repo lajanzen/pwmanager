@@ -1,3 +1,4 @@
+import dotenv from "dotenv"; // muss unten (unter den imports) noch aufgerufen werden
 import {
   askForMainPassword,
   chooseCommand,
@@ -8,9 +9,16 @@ import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
 import { readCredentials, saveCredentials } from "./utils/credentials";
 import CryptoJS from "crypto-js";
 
+dotenv.config();
+
 /* Solution with Recursion */
+
+console.log(process.env.MONGO_URL);
+
 // function start () {
 const start = async () => {
+  // await connectDatabase();
+
   const mainPassword = await askForMainPassword();
   if (!(await isMainPasswordValid(mainPassword))) {
     console.log("Is invalid");
