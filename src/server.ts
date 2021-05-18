@@ -8,16 +8,21 @@ import {
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
 import { readCredentials, saveCredentials } from "./utils/credentials";
 import CryptoJS from "crypto-js";
+import { connectDatabase } from "./utils/database";
 
 dotenv.config();
 
 /* Solution with Recursion */
 
-console.log(process.env.MONGO_URL);
-
 // function start () {
 const start = async () => {
-  // await connectDatabase();
+  // Prüfen, ob es einen MONGO DB Link gibt
+  if (process.env.MONGO_URL === undefined) {
+    throw new Error("Missing env MONGO_URL");
+  }
+
+  // Mit MONGO DB verbinden
+  await connectDatabase(process.env.MONGO_URL);
 
   const mainPassword = await askForMainPassword();
   if (!(await isMainPasswordValid(mainPassword))) {
