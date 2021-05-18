@@ -1,8 +1,19 @@
-import { MongoClient } from "mongodb";
+import { Collection, MongoClient } from "mongodb";
 
+let client: MongoClient; // definieren wir hier, damit wir auch in anderen Funktionen darauf zugreifen können
 export const connectDatabase = async (url: string): Promise<void> => {
-  const client = new MongoClient(url);
+  client = new MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   await client.connect();
-  const databasesList = await client.db().admin().listDatabases();
-  console.log(databasesList);
+};
+
+export const disconnectDatabase = (): Promise<void> => {
+  return client.close();
+};
+
+// Greift auf Credential-List in MongoDB zu
+export const getCollection = (name: string): Collection => {
+  return client.db().collection(name);
 };

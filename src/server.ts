@@ -8,7 +8,7 @@ import {
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
 import { readCredentials, saveCredentials } from "./utils/credentials";
 import CryptoJS from "crypto-js";
-import { connectDatabase } from "./utils/database";
+import { connectDatabase, disconnectDatabase } from "./utils/database";
 
 dotenv.config();
 
@@ -80,11 +80,15 @@ const start = async () => {
           }
           await saveCredentials(newCredential);
           console.log("We've saved your new credentials!");
+
+          askforCommand();
         }
         break;
     }
   };
   askforCommand();
+
+  await disconnectDatabase;
 };
 
 start();
