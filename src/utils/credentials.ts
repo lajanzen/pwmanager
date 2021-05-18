@@ -1,30 +1,42 @@
-import fs from "fs/promises";
+// import fs from "fs/promises";
 import { Credential } from "../types";
-// import { askForCredential } from "./questions";
+import { getCredentialsCollection } from "./database";
 import CryptoJS from "crypto-js";
-
-type DB = {
-  credentials: Credential[];
-};
+import { chooseService } from "./questions";
 
 export const readCredentials = async (): Promise<Credential[]> => {
-  const result = await fs.readFile("./db.json", "utf-8");
-  const data: DB = JSON.parse(result);
-  return data.credentials;
+  return await getCredentialsCollection()
+    .find()
+    .sort({ service: 1 }) // Sortiert die Ergebnisse Alphabetisch
+    .toArray(); // wandelt Cursor-Ergebnisse in Array um
+};
+
+export const selectCredential = async (): Promise<Credential | undefined> => {
+  const credentials = await readCredentials();
+  const credentialServices = credentials.map(
+    (credential) => credential.service
+  );
+  const service = await chooseService(credentialServices);
+  const selectedService = credentials.find(
+    (credential) => credential.service === service
+  );
+  return selectedService;
 };
 
 export const saveCredentials = async (
   newCredential: Credential
 ): Promise<void> => {
-  const credentials = await readCredentials();
-  const encrypted = CryptoJS.AES.encrypt(
+  // Passwort encrypten
+  const encryptedPassword = CryptoJS.AES.encrypt(
     newCredential.password,
     "bla"
   ).toString();
-  newCredential.password = encrypted;
-  credentials.push(newCredential);
-  const newDB = { credentials: credentials };
+  newCredential.password = encryptedPassword;
 
-  const newCredentialListJSON = JSON.stringify(newDB, null, 2);
-  await fs.writeFile("./db.json", newCredentialListJSON);
+  // In MongoDB speichern
+  await getCredentialsCollection().insertOne(newCredential);
+};
+
+export const deleteCredential = async (service: Credential): Promise<void> => {
+  await getCredentialsCollection().deleteOne(service);
 };
