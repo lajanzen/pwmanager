@@ -1,10 +1,26 @@
 // import fs from "fs/promises";
 import { Credential } from "../types";
-import { getCollection } from "./database";
+import { getCredentialsCollection } from "./database";
 import CryptoJS from "crypto-js";
+import { chooseService } from "./questions";
 
 export const readCredentials = async (): Promise<Credential[]> => {
-  return await getCollection("credentials").find().toArray();
+  return await getCredentialsCollection()
+    .find()
+    .sort({ service: 1 }) // Sortiert die Ergebnisse Alphabetisch
+    .toArray(); // wandelt Cursor-Ergebnisse in Array um
+};
+
+export const selectCredential = async (): Promise<Credential | undefined> => {
+  const credentials = await readCredentials();
+  const credentialServices = credentials.map(
+    (credential) => credential.service
+  );
+  const service = await chooseService(credentialServices);
+  const selectedService = credentials.find(
+    (credential) => credential.service === service
+  );
+  return selectedService;
 };
 
 export const saveCredentials = async (
@@ -18,5 +34,9 @@ export const saveCredentials = async (
   newCredential.password = encryptedPassword;
 
   // In MongoDB speichern
-  await getCollection("credentials").insertOne(newCredential);
+  await getCredentialsCollection().insertOne(newCredential);
+};
+
+export const deleteCredential = async (service: Credential): Promise<void> => {
+  await getCredentialsCollection().deleteOne(service);
 };

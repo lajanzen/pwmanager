@@ -2,11 +2,14 @@ import dotenv from "dotenv"; // muss unten (unter den imports) noch aufgerufen w
 import {
   askForMainPassword,
   chooseCommand,
-  chooseService,
   askForCredential,
 } from "./utils/questions";
 import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
-import { readCredentials, saveCredentials } from "./utils/credentials";
+import {
+  deleteCredential,
+  saveCredentials,
+  selectCredential,
+} from "./utils/credentials";
 import CryptoJS from "crypto-js";
 import { connectDatabase, disconnectDatabase } from "./utils/database";
 
@@ -45,16 +48,20 @@ const start = async () => {
     const command = await chooseCommand();
 
     switch (command) {
+      case "delete": {
+        const selectedService = await selectCredential();
+        if (selectedService) {
+          await deleteCredential(selectedService);
+          console.log("We've deleted your credentials.");
+
+          askforCommand();
+        }
+        break;
+      }
+
       case "list":
         {
-          const credentials = await readCredentials();
-          const credentialServices = credentials.map(
-            (credential) => credential.service
-          );
-          const service = await chooseService(credentialServices);
-          const selectedService = credentials.find(
-            (credential) => credential.service === service
-          );
+          const selectedService = await selectCredential();
           if (selectedService) {
             const decrypted = CryptoJS.AES.decrypt(
               selectedService.password,

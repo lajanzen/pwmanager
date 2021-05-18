@@ -24,6 +24,7 @@ export const chooseCommand = async (): Promise<Command> => {
       choices: [
         { name: "List credentials", value: "list" },
         { name: "Add new credentials", value: "add" },
+        { name: "Delete credential", value: "delete" },
       ],
     },
   ]);
@@ -63,7 +64,7 @@ export const chooseService = async (services: string[]): Promise<string> => {
     {
       type: "list",
       name: "service",
-      message: "These are your saved credentials:",
+      message: "Choose service:",
       choices: services,
     },
   ]);
