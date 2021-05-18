@@ -1,3 +1,8 @@
+import { MongoClient } from "mongodb";
+
 export const connectDatabase = async (url: string): Promise<void> => {
-  console.log(url);
+  const client = new MongoClient(url);
+  await client.connect();
+  const databasesList = await client.db().admin().listDatabases();
+  console.log(databasesList);
 };
