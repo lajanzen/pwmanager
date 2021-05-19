@@ -17,4 +17,4 @@ Content-Type: application/json
 }
 
 ### Delete a credential
-DELETE /api/credentials/MyService HTTP/1.1
+DELETE http://localhost:5000/api/credentials/MyService HTTP/1.1

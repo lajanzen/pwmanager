@@ -2,7 +2,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import { readCredentials, saveCredentials } from "./utils/credentials";
+import {
+  deleteCredential,
+  readCredentials,
+  saveCredentials,
+} from "./utils/credentials";
 import { connectDatabase } from "./utils/database";
 
 if (process.env.MONGO_URL === undefined) {
@@ -22,7 +26,16 @@ app.get("/api/credentials", async (_request, response) => {
 app.post("/api/credentials", async (request, response) => {
   const credentials = await request.body;
   saveCredentials(credentials);
-  response.json(request.body);
+  response.json("Credential saved in db");
+});
+
+app.delete("/api/credentials/:service", async (request, response) => {
+  const credential = request.params.service;
+  await deleteCredential({ service: credential });
+  const credentials = await readCredentials();
+  response.json(credentials);
+
+  // response.send("Delete credentials");
 });
 
 connectDatabase(process.env.MONGO_URL).then(() => {
