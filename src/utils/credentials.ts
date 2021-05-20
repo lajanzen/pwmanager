@@ -11,6 +11,14 @@ export const readCredentials = async (): Promise<Credential[]> => {
     .toArray(); // wandelt Cursor-Ergebnisse in Array um
 };
 
+export const readCredential = async (service: string): Promise<Credential> => {
+  const credential = await getCredentialsCollection().findOne({ service });
+  if (!credential) {
+    throw new Error("Service does not exist");
+  }
+  return credential;
+};
+
 export const selectCredential = async (): Promise<Credential | undefined> => {
   const credentials = await readCredentials();
   const credentialServices = credentials.map(
@@ -37,6 +45,8 @@ export const saveCredentials = async (
   await getCredentialsCollection().insertOne(newCredential);
 };
 
-export const deleteCredential = async (service: Credential): Promise<void> => {
+export const deleteCredential = async (service: {
+  service: string;
+}): Promise<void> => {
   await getCredentialsCollection().deleteOne(service);
 };

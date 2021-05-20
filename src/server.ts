@@ -1,101 +1,53 @@
-import dotenv from "dotenv"; // muss unten (unter den imports) noch aufgerufen werden
-import {
-  askForMainPassword,
-  chooseCommand,
-  askForCredential,
-} from "./utils/questions";
-import { doesServiceExist, isMainPasswordValid } from "./utils/validation";
-import {
-  deleteCredential,
-  saveCredentials,
-  selectCredential,
-} from "./utils/credentials";
-import CryptoJS from "crypto-js";
-import { connectDatabase, disconnectDatabase } from "./utils/database";
-
+import dotenv from "dotenv";
 dotenv.config();
 
-/* Solution with Recursion */
+import express from "express";
+import {
+  deleteCredential,
+  readCredential,
+  readCredentials,
+  saveCredentials,
+} from "./utils/credentials";
+import { connectDatabase } from "./utils/database";
 
-// function start () {
-const start = async () => {
-  // Prüfen, ob es einen MONGO DB Link gibt
-  if (process.env.MONGO_URL === undefined) {
-    throw new Error("Missing env MONGO_URL");
-  }
+if (process.env.MONGO_URL === undefined) {
+  throw new Error("Missing env MONGO_URL");
+}
 
-  // Mit MONGO DB verbinden
-  await connectDatabase(process.env.MONGO_URL);
+const app = express();
+const port = 5000;
 
-  const mainPassword = await askForMainPassword();
-  if (!(await isMainPasswordValid(mainPassword))) {
-    console.log("Is invalid");
-    start(); // Recursion (springt zurück zur start-Funktion)
-    return;
-  }
-  console.log("Is valid");
+app.use(express.json());
 
-  /* Solution with while */
-  // const start = async () => {
-  //   let mainPassword = await askForMainPassword();
-  //   while (!(await isMainPasswordValid(mainPassword))) {
-  //     console.log("Is invalid");
-  //     mainPassword = await askForMainPassword();
-  //   }
-  //   console.log("Is valid");
+app.get("/api/credentials", async (_request, response) => {
+  const credentials = await readCredentials();
+  response.json(credentials);
+});
 
-  const askforCommand = async () => {
-    const command = await chooseCommand();
+app.get("/api/credentials/:service", async (request, response) => {
+  const credential = await readCredential(request.params.service);
+  response.json(credential);
+});
 
-    switch (command) {
-      case "delete": {
-        const selectedService = await selectCredential();
-        if (selectedService) {
-          await deleteCredential(selectedService);
-          console.log("We've deleted your credentials.");
+app.post("/api/credentials", async (request, response) => {
+  const credentials = await request.body;
+  saveCredentials(credentials);
+  response.json("Credential saved in db");
+});
 
-          askforCommand();
-        }
-        break;
-      }
+app.delete("/api/credentials/:service", async (request, response) => {
+  const credential = request.params.service;
+  await deleteCredential({ service: credential });
+  const credentials = await readCredentials();
+  response.json(credentials);
 
-      case "list":
-        {
-          const selectedService = await selectCredential();
-          if (selectedService) {
-            const decrypted = CryptoJS.AES.decrypt(
-              selectedService.password,
-              "bla"
-            );
-            const password = decrypted.toString(CryptoJS.enc.Utf8);
-            console.log(
-              `Your password for ${selectedService.service} is ${password}.`
-            );
-          }
-          askforCommand();
-        }
+  // response.send("Delete credentials");
+});
 
-        break;
-      case "add":
-        {
-          let newCredential = await askForCredential();
-          while (await doesServiceExist(newCredential)) {
-            console.log(
-              `The service "${newCredential.service}" already exists!`
-            );
-            newCredential = await askForCredential();
-          }
-          await saveCredentials(newCredential);
-          console.log("We've saved your new credentials!");
-
-          askforCommand();
-        }
-        break;
-    }
-  };
-  askforCommand();
-
-  await disconnectDatabase;
-};
-
-start();
+connectDatabase(process.env.MONGO_URL).then(() => {
+  // then ist Alternative zu await
+  console.log("Database connected");
+  app.listen(port, () => {
+    console.log(`PWmanager listening at http://localhost:${port}`);
+  });
+});
